@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en-PL">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Reptilian VladeoZ">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/reptgames.css">
+  <link rel="icon" type="image/x-icon" href="/website-icon.png">
+  <script src="/scripts.js"></script>
+  <title>Material Works - Reptilian Games</title>
+</head>
+
+<body>
+  <div>
+    <video autoplay muted loop id="backgroundVideo">
+      <source src="/background-video.webm" type="video/webm">
+    </video>
+  </div>
+  <div class="content">
+    <header><img id="title-logo" src="/site-logo-lower-res.webp">
+      <nav class="nav-tabs">
+        <a class="navigation" href="/index.html">Home</a>
+        <a class="navigation active-nav" href="/portfolio-posts/portfolio.html">Portfolio</a>
+        <a class="navigation" href="/personal-projects/personal-projects.html">Personal Projects</a>
+        <a class="navigation" href="/about.html">About Me</a>
+      </nav>
+    </header>
+    <main class="content-panel">
+      <h1><b>Master Material for props in a city environment</b><br><sup style="font-size: 18px;">and some extra
+          material effects</sup></h1>
+      <hr>
+      <p style="font-size: 14px; float: right; text-align: right;"><i>Published: 2025-03-27 19:00 CET</i></p><!--replace with actual date and time-->
+      <p style="font-size: 14px; margin-bottom: 8px;"><i>Work was done in a default EGS version of Unreal Engine
+          5.5.4</i></p>
+      <article class="content-block">
+        <div class="article-sidenav">
+          <a href="#goal">Goal and Scope</a>
+          <a href="#basic-features">Basic features</a>
+          <a href="#grime-and-dirt">Grime & Dirt</a>
+          <a href="#paint-and-decals">Paint & Decals</a>
+          <a href="#traffic-light">Traffic Light</a>
+          <a href="#credits">Credits</a>
+        </div>
+        <h2 id="goal" style="margin-left: 6vw;">Goal, scope and pre-requisites</h2>
+        <p class="article-paragraph">Goal of this project was a showcase of skills and understanding of how unreal
+          material graph works,
+          as well as general understanding of content creation pipelines involved in creating games.<br>
+          The resulting material might not necessarily end up in any projects by itself,
+          but the approach to creating it was as if it would be used in a game project.</p>
+        <div class="image-format">
+          <!-- The Modal 1 -->
+          <img class="article-img" src="thumbnails/1_animated_thumbnail.webp" alt="animated image that switches between various features of the material">
+          <div class="modal-panel">
+            <video class="article-img-full" preload="metadata" autoplay loop muted></video>
+            <span class="close">&times;</span>
+          </div>
+          <script>modalImage(0, "full-quality/1_animated_thumbnail.webm")</script>
+        </div>
+        <p class="caption-paragraph">Applied master material preview<br> (press to expand images)</p>
+        <p class="article-paragraph">First, setting up pre-requisites and a scope, how I went step by step:</p>
+        <ol class="article-list">
+          <li>Determining a specific idea and an end goal. In this case, it was to create a MM that would be used by
+            various props in a city environment.</li>
+          <p class="caption-paragraph" style="margin-left: 0;">In this case, it’s something that I had to come up with
+            based on my own judgement,
+            in a real development environment this usually would be done in collaboration with art team to see, what
+            specific needs they might have.</p>
+          <li>The specific city environment as a reference was a more or less “out of the way” residential area of a
+            European city (which I mostly went on location to gather some notes).</li>
+          <li>With this, next thing to determine was a process of how assets are being added to the engine, and what
+            specific ones I would have and be able to work with.</li>
+          <li>Out of this, I determined which features I would want to have in this specific material, to narrow down
+            the scope and features (listed below).</li>
+        </ol>
+        <br>
+        <p class="article-paragraph">The resulting MVP scope ended up being:</p>
+        <ul class="article-list">
+          <li>the assets to use would come from a model database/marketplace like sketchfab or fab, thus the material
+            would need to be able to adapt to a lack of certain types of maps, or them being done in different way;
+          </li>
+          <p class="caption-paragraph" style="margin-left: 0;">While not necessarily applicable in bigger studios
+            where the assets would either be done by internal artist team, or by an outsource, to a specific standard,
+            it is closer to how a small/indie studio would operate, with purchasing/downloading “generalized” assets,
+            which likely would require the additional adaptability</p>
+          <li>the basics, for a PBR-oriented workflow - using base color, AO, Roughness, Metallic, normals, and some
+            ability to control them;</li>
+          <li>support for alpha and transparency masks (as it is expected that some assets, i.e. wire fences, bus
+            stops and the like, might require it);</li>
+          <li>support for emissives and emissive maps (as a lot of the street infrastructure can have glowing
+            elements, like traffic lights, street lights, ATMs).</li>
+        </ul>
+        <p class="article-paragraph">After setting up the minimal scope, based on the notes and observations
+          collected,
+          a scope expansion was planned out, to be done once the MVP is finished (sorted from most needed to
+          essentially “cool-to-have”s):</p>
+        <ul class="article-list">
+          <li>grime & dirt application on assets via a mask;</li>
+          <li>automatic grime & dirt application near contact of the asset with a different surface;</li>
+          <li>grime & dirt per-instance customization (ability to change parameters on individual actors on a level);
+          </li>
+          <li>paint & decals application on a material level (to apply things like graffiti or paint from inside a
+            material)</li>
+          <li>fully material-controlled traffic light (that one I just felt like being a little “extra”)</li>
+        </ul>
+        <p class="article-paragraph">With everything planned out, only thing left was to actually implement it.</p>
+        <br>
+        <h2 id="basic-features" style="margin-left: 6vw;">Implementation - Basic features</h2>
+        <div class="image-format">
+          <!-- The Modal 2-->
+          <img class="article-img" src="thumbnails/2_basics_overall_graph.webp" alt="picture of material graph zoomed out">
+          <div class="modal-panel">
+            <img class="article-img-full" loading="lazy">
+            <span class="close">&times;</span>
+          </div>
+          <script>modalImage(1, "full-quality/2_basics_overall_graph.jpg")</script>
+        </div>
+        <p class="caption-paragraph">Material graph overview</p>
+        <p class="article-paragraph">All of the MVP features were done as a material function,
+          due to easier scalability for further feature additions, and expanded easier controls over UVs, which is
+          then plugged as a material attribute inside a master material asset.</p>
+        <p class="article-paragraph">Base color is set up with controls ranging from having just a full color fill, to
+          having a base color texture,
+          color tint and a mask for that color tint (meaning, if needed, a custom mask could be created to make more
+          color variations of certain assets, while reusing the same base color texture).</p>
+        <div class="image-format">
+          <!-- The Modal 3 base color graph-->
+          <img class="article-img" src="thumbnails/3_basics_basecolor.webp" alt="base color graph picture">
+          <div class="modal-panel">
+            <img class="article-img-full" loading="lazy">
+            <span class="close">&times;</span>
+          </div>
+          <script>modalImage(2, "full-quality/3_basics_basecolor.jpg")</script>
+        </div>
+        <p class="caption-paragraph">Base color setup</p>
+        <p class="article-paragraph">AO, Roughness and Metallic controls all feature an option to toggle between a
+          packed texture,
+          and separate ones (as established from the way assets are sourced).</p>
+        <div class="image-format">
+          <!-- The Modal 4 -->
+          <img class="article-img" src="thumbnails/4_basics_ARM.webp" alt="ARM texture graph">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"> <span class="close">&times;</span>
+          </div>
+          <script>modalImage(3, "full-quality/4_basics_ARM.jpg")</script>
+        </div>
+        <p class="caption-paragraph">ARM textures setup</p>
+        <p class="article-paragraph">AO texture has additional controls to increase or decrease the amount and power
+          of AO, for more artistic controls.</p>
+        <p class="article-paragraph">Roughness controls switches between a roughness texture and a slider which sets a
+          uniform value to the material.</p>
+        <p class="caption-paragraph" style="margin-left: 7vw; margin-right: 15vw;">Ideally, with UE5 and while using
+          Lumen, it should have additional controls to disallow pure black and pure white values, as, first, they are
+          not proper PBR values most of the time, and second,
+          having improper PBR values messes up how indirect lighting is calculated, resulting in possible artifacts.
+          However, for purposes of this material, this was omitted.</p>
+        <p class="article-paragraph">Metallic only switches between using a texture or not (mostly due to assets that
+          are used only having metallic values if they have a texture for it)</p>
+        <p class="article-paragraph">Normal has a setup to additionally blend in a tileable Detail map, as well as
+          featuring strength controls for both.</p>
+        <div class="image-format"> 
+          <!-- The Modal 5 --> 
+          <img class="article-img" src="thumbnails/5_basics_normals.webp" alt="Normal maps setup">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"> <span class="close">&times;</span>
+          </div>
+          <script>modalImage(4, "full-quality/5_basics_normals.jpg")</script>
+        </div>
+        <p class="caption-paragraph">Normal maps setup</p>
+        <p class="article-paragraph">Translucency and Alpha masks have simple setups to switch them on or off, 
+          strength controls and a tooltip to remind to enable material override, to switch blend mode to masked or translucent (otherwise, with opaque, neither would work)</p>
+        <div class="image-format"> 
+          <!-- The Modal 6 --> 
+          <img class="article-img" src="thumbnails/6_basics_translucency_alpha.webp" alt="Translucency and alpha masks setup">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"> <span class="close">&times;</span>
+          </div>
+          <script>modalImage(5, "full-quality/6_basics_translucency_alpha.jpg")</script>
+        </div>
+        <p class="caption-paragraph">Translucency and alpha setup</p>
+        <p class="article-paragraph">Emissive has controls of color, strength, and ability to add an emissive map, to light up only masked parts of the material.</p>
+        <div class="image-format"> 
+          <!-- The Modal 7 --> 
+          <img class="article-img" src="thumbnails/7_basics_emissive.webp" alt="Emissive setup">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"> <span class="close">&times;</span>
+          </div>
+          <script>modalImage(6, "full-quality/7_basics_emissive.jpg")</script>
+        </div>
+        <p class="caption-paragraph">Emissive setup</p>
+        <br>
+        <p class="article-paragraph">Here’s the look of the assets with this set of features, as well as a view of unreal shader complexity view mode, to show the cost of the material:</p>
+        <!--Image comparison block for basic features (replace with proper images)-->
+        <div class="img-comp-container">
+          <div class="img-comp-img">
+            <img src="full-quality/8_2_basics_shaderview.png">
+          </div>
+          <div class="img-comp-img img-comp-overlay">
+            <img src="full-quality/8_1_basics_enabled.png">
+          </div>
+        </div>
+        <p class="caption-paragraph">Note: all of these were taken after material was fully finished, meaning the costs displayed are with expanded features disabled via static switches, rather than their full absence.</p>
+        
+        <div class="image-format"> 
+          <!-- The Modal 8 --> 
+          <img class="article-img" src="thumbnails/9_basics_stats.webp" alt="Shader stats">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"> <span class="close">&times;</span>
+          </div>
+          <script>modalImage(7, "full-quality/9_basics_stats.jpg")</script>
+        </div>
+        <p class="caption-paragraph">Shader stats for basic features</p>
+        <br>
+        <p class="article-paragraph">Overall, this part of implementation took about 2-4 hours, 
+          including verifying that everything works properly and organizing the nodes, creating and setting up groups and sort order for proper display of the parameters inside the material instance.</p>
+        <div class="image-format"> 
+          <!-- The Modal 9 --> 
+          <img class="article-img" src="thumbnails/10_basics_MI_view.webp" alt="Showing off features inside material instance">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"> <span class="close">&times;</span>
+          </div>
+          <script>modalImage(8, "full-quality/10_basics_MI_view.jpg")</script>
+        </div>
+        <p class="caption-paragraph">Caption Basic features</p>
+        <br>
+        <h2 id="grime-and-dirt" style="margin-left: 6vw;">Implementation - Grime & Dirt</h2>
+
+        <p class="article-paragraph">All of the grime & dirt application itself was done in a separate function, mostly for purposes of convenience and readability.</p>
+        <div class="image-format"> 
+          <!-- The Modal 10 --> 
+          <img class="article-img" src="thumbnails/11_grimendirt_overall_graph.webp" alt="Material graph for grime and dirt">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"> <span class="close">&times;</span>
+          </div>
+          <script>modalImage(9, "full-quality/11_grimendirt_overall_graph.jpg")</script>
+        </div>
+        <p class="caption-paragraph">Caption Grime and dirt overview</p>
+        <p class="article-paragraph">Controls of texture UV manipulation was put inside the main function, and connected to Customized UVs inputs.</p>
+        <div class="image-format"> 
+          <!-- The Modal 11 --> 
+          <img class="article-img" src="thumbnails/12_grimendirt_texcoord.webp" alt="UV manipulation graph">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"> <span class="close">&times;</span>
+          </div>
+          <script>modalImage(10, "full-quality/12_grimendirt_texcoord.jpg")</script>
+        </div>
+        <p class="caption-paragraph" style="margin-right: 15vw;">Note: UV3 left empty as it is used by a paint&decals feature, so a skipped space is used as a signifier that it shouldn’t be used, UV0 is left empty as it is used by base textures and shouldn’t be modified.</p>
+        <p class="article-paragraph">The basics of the setup itself consist of a base color, received as an input to the function, and several parameters to specify the texture of G&D, 
+          a mask, and parameters to control amounts and strength of those. Then function outputs the resulting base color texture, mask, and also strength, to be used inside the MMF 
+          (base color going directly into the output, while mask and strength are used to modify metallic and roughness textures to account for how those would change with the surface becoming “dirtier”)</p>
+        <div class="image-format"> 
+          <!-- The Modal 12 --> 
+          <img class="article-img" src="thumbnails/13_grimendirt_MMF.webp" alt="MMF grime and dirt usage">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"> <span class="close">&times;</span>
+          </div>
+          <script>modalImage(11, "full-quality/13_grimendirt_MMF.jpg")</script>
+        </div>
+        <p class="caption-paragraph" style="margin-right: 15vw;">Note: while this setup could be moved inside the function fully, imo it provided useful additional clarity and distinction between “this is how the dirt is added” being in a G&D function, and “this is how roughness and metallic are modified to accommodate it” being in a master function.</p>
+        <!--Image comparison block for basic dirt and grime-->
+        <div class="img-comp-container">
+          <div class="img-comp-img">
+            <img src="full-quality/14_2_grimendirt_shaderview.png">
+          </div>
+          <div class="img-comp-img img-comp-overlay">
+            <img src="full-quality/14_1_grimendirt_enabled.png">
+          </div>
+        </div>
+        <p class="caption-paragraph" style="margin-right: 15vw;">Note: while the shader complexity view displays all features stacked together, shader stats from here on display cost of base set of features + the specific extra feature being written about, not all stacked together.</p>
+        <div class="image-format"> 
+          <!-- The Modal 13 --> 
+          <img class="article-img" src="thumbnails/15_grimendirt_stats.webp" alt="Shader stats with base grime and dirt">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"> <span class="close">&times;</span>
+          </div>
+          <script>modalImage(12, "full-quality/15_grimendirt_stats.jpg")</script>
+        </div>
+        <p class="caption-paragraph">Shader stats with base grime and dirt</p>
+        <p class="article-paragraph">Next, a setup for both texture and mask are done to use absolute world position, with ability to specifically enable it on individual actors in a level, 
+          with the use of custom primitive data (with a downside that this is also a part of the material which would be always compiled when G&D is enabled, increasing the overall cost of the material even if this feature specifically isn’t used). 
+          Additionally, controls were made to change texture sizes for both mask and G&D texture for that extra bit of artistic control.</p>
+        <div class="image-format"> 
+          <!-- The Modal 14 - custom primitive data setup --> 
+          <img class="article-img" src="thumbnails/16_CPD_setup.webp" alt="Custom primitive data setup">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(13, "full-quality/16_CPD_setup.jpg")</script>
+        </div>
+        <p class="caption-paragraph">Caption CPD setup</p>
+        <p class="article-paragraph">How it looks when used on a level (press to expand into video):</p>
+        <div class="image-format"> 
+          <!-- The Modal 15 - custom primitive data video --> 
+          <img class="article-img" src="thumbnails/17_CPD_thumbnail.webp" alt="Custom primitive data video">
+          <div class="modal-panel"> 
+            <video class="article-img-full" preload="metadata" controls></video>
+              <span class="close">&times;</span>
+          </div>
+          <script>modalImage(14, "full-quality/17_Cpd_Showcase.webm")</script>
+        </div>
+        <p class="article-paragraph">
+          Last feature for G&D was application of it on contact, which is a relatively simple setup, 
+          with calculating distance to nearest horizontal surface, which is used as a mask, an extra texture parameter for contact G&D specifically, 
+          and control for how much of the mask should be used, and applying all of that on top of general G&D.
+        </p>
+        <p class="caption-paragraph" style="margin-left: 7vw;">I believe it uses distance fields to calculate it, thus if feature is disabled/isn't supported (i.e. on mobile), it won't work.</p>
+        <div class="image-format"> 
+          <!-- The Modal 16 - grime and dirt on contact, possibly a video --> 
+          <img class="article-img" src="thumbnails/18_1_contactdirt_setup.webp" alt="Grime and dirt on contact">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(15, "full-quality/18_1_contactdirt_setup.jpg")</script>
+        </div>
+        <div class="image-format"> 
+          <!-- The Modal 16 - grime and dirt on contact, possibly a video --> 
+          <img class="article-img" src="thumbnails/18_2_contactdirt_setup.webp" alt="Grime and dirt on contact">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(16, "full-quality/18_2_contactdirt_setup.jpg")</script>
+        </div>
+        <p class="caption-paragraph" style="margin-right: 15vw;">Note: some additional variation could be introduced to make the mask less uniform, for example with a noise texture, as without it, 
+          this setup is essentially just a gradient, but from testing, the difference wouldn’t be too noticeable, and it saves an extra texture sample.
+        </p>
+        <p class="article-paragraph">Final look of all features enabled and used, and shader stats:</p>
+        <!--Image comparison block for contact dirt and grime-->
+        <div class="img-comp-container">
+          <div class="img-comp-img">
+            <img src="full-quality/19_2_contactgrime_shaderview.png">
+          </div>
+          <div class="img-comp-img img-comp-overlay">
+            <img src="full-quality/19_1_contactgrime_enabled.png">
+          </div>
+        </div>
+        <br>
+        <div class="image-format"> 
+          <!-- The Modal 17 - grime and dirt on contact shader stats --> 
+          <img class="article-img" src="thumbnails/20_contactdirt_stats.webp" alt="Grime and dirt on contact stats">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(17, "full-quality/20_contactdirt_stats.jpg")</script>
+        </div>
+        <p class="article-paragraph">Overall, implementation, tests, experimenting a bit and organizing this took around 3-4 hours.</p>
+        <br>
+        <h2 id="paint-and-decals" style="margin-left: 6vw;">Implementation - Paint & Decals</h2>
+        <p class="article-paragraph">Basic idea for this was to have several slots to put any kind of decals directly inside material instance, 
+          which would allow for that extra degree of customizability (feature was thought out after seeing a lot of things graffitied and covered in stickers/pamphlets/ads on the streets)
+        </p>
+        <p class="caption-paragraph" style="margin-left: 7vw; margin-right: 15vw;">Note: usually this kind of stuff would be applied as regular decals inside a level, 
+          or just included in the base color texture at asset creation, but I thought it would be cool to have a feature like this inside a material.
+        </p>
+        <p class="article-paragraph">While the process of applying a single texture decal isn’t too different from how G&D was setup (in some parts, even simpler), 
+          the extra complexity here came from the desire to have 5 total toggleable slots, all with its own scale, position, rotation and color controls.
+        </p>
+        <div class="image-format"> 
+          <!-- The Modal 18 - paint and decals material graph --> 
+          <img class="article-img" src="thumbnails/21_paintndecals_overall_graph.webp" alt="Paint and decals material graph">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(18, "full-quality/21_paintndecals_overall_graph.jpg")</script>
+        </div>
+        <p class="article-paragraph">Initially the idea was to have an individual function for a single decal, which is then copy-pasted inside a different P&D “control” function, 
+          stacking those together, and then using this “control” inside master function to apply to base textures. However, due to the nature of how functions work with parameters and static switches, most of those 
+          needed to be outside of the function, so individual function doesn’t really do much, and probably could be omitted entirely, but I decided it wasn't really worth it to remove those, and it wouldn't affect readability much.
+        </p>
+        <div class="image-format"> 
+          <!-- The Modal 19 - paint and decals individual material graph --> 
+          <img class="article-img" src="thumbnails/21_1_paintndecals_singledecal.webp" alt="Paint and decals individual material graph">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(19, "full-quality/21_1_paintndecals_singledecal.jpg")</script>
+        </div>
+        <div class="image-format"> 
+          <!-- The Modal 19 - paint and decals individual material graph --> 
+          <img class="article-img" src="thumbnails/21_2_paintndecals_individual.webp" alt="Paint and decals individual material graph">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(20, "full-quality/21_2_paintndecals_individual.jpg")</script>
+        </div>
+        <p class="article-paragraph">Aside from that, it’s really straightforward, with chained base color and mask, and each decal having separate static switches, up to 5.
+          After that, both are output and used inside master function, again in a similar way to G&D.
+        </p>
+        <div class="image-format"> 
+          <!-- The Modal 20 - paint and decals application in MMF --> 
+          <img class="article-img" src="thumbnails/22_paintndecals_MMF.webp" alt="Paint and decals in MMF">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(21, "full-quality/22_paintndecals_MMF.jpg")</script>
+        </div>
+        <p class="article-paragraph">In the end result, every decal can be scaled, moved, rotated and painted. Potentially it could also have the ability to use custom primitive data, 
+          but I decided not to because of the material already getting somewhat expensive with all features enabled.
+        </p>
+        <!--Image comparison block for paint and decals-->
+        <div class="img-comp-container">
+          <div class="img-comp-img">
+            <img src="full-quality/23_2_paintndecals_shaderview.png">
+          </div>
+          <div class="img-comp-img img-comp-overlay">
+            <img src="full-quality/23_1_paintndecals_enabled.png">
+          </div>
+        </div>
+        <p class="caption-paragraph">Spray paint decals designed by <a href="http://www.freepik.com" target="_blank">Freepik</a></p>
+        
+        <div class="image-format"> 
+          <!-- The Modal 21 - paint and decals shader stats --> 
+          <img class="article-img" src="thumbnails/24_paintndecals_stats.webp" alt="Paint and decals stats">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(22, "full-quality/24_paintndecals_stats.jpg")</script>
+        </div>
+        <p class="caption-paragraph" style="margin-right: 15vw;">Note: one pretty major downside of this approach 
+          is being very dependent on how good the UV is unwrapped for assets, as the texture coordinate changes transforms based on those, so if there’s a particularly ugly seam, the decal would appear cut off, 
+          but imo it still provides for some useful customization and artistic control.
+        </p>
+        <p class="article-paragraph">Overall, implementation, tests, experimenting a bit and organizing this took around 3-4 hours, too.</p>
+
+        <br>
+        <h2 id="traffic-light" style="margin-left: 6vw;">Implementation - Traffic Light</h2>
+        <p class="article-paragraph">Setup is done as both a separate function, and separate master material (as it is a specific feature for the traffic light, 
+          it doesn’t need to be present on all other props, thus separate), and it expands and modifies material attributes that are being got from base master function.
+        </p>
+        <div class="image-format"> 
+          <!-- The Modal 22 - Traffic light overall material graph --> 
+          <img class="article-img" src="thumbnails/25_traffic_light_overall_graph.webp" alt="Traffic light overall material graph">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(23, "full-quality/25_traffic_light_overall_graph.jpg")</script>
+        </div>
+        <p class="article-paragraph">The logic itself is essentially using a texture coordinate point to draw a circle, 
+          and then using a stepping panner to move that circle between the points where the lights should be, which is used as an emissive mask.
+        </p>
+        <p class="caption-paragraph" style="margin-left: 7vw; margin-right: 15vw;">Note: as it’s a 3rd party asset, the UV unwrap for the lights wasn’t suited for this use, 
+          but it was fortunate that the lights are at least at the same distance from each other in it. Basically meaning that there are a bunch of hard-set, non-reusable, values for scale, 
+          jump location and starting position, and only the duration being a controllable parameter.
+        </p>
+        <div class="image-format"> 
+          <!-- The Modal 23 - Traffic light jumping panner --> 
+          <img class="article-img" src="thumbnails/26_traffic_light_stepping_light.webp" alt="Traffic light jumping panner">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(24, "full-quality/26_traffic_light_stepping_light.jpg")</script>
+        </div>
+        <p class="article-paragraph">The color change is done with “if” which takes a value from the panner, which then uses base color to add an extra bit of texture, 
+          to have a slight appearance of the light actually coming from behind the glass of a traffic light, instead of just being an emissive circles on top of it (even if it technically still is)
+        </p>
+        <div class="image-format"> 
+          <!-- The Modal 24 - Traffic light color application in material graph --> 
+          <img class="article-img" src="thumbnails/27_traffic_light_colors.webp" alt="Traffic light color application">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(25, "full-quality/27_traffic_light_colors.jpg")</script>
+        </div>
+        <p class="article-paragraph">Final look of how traffic light functions:</p>
+        <div class="image-format">
+          <!-- The Modal 25 (hacking in a video)-->
+          <img class="article-img" src="thumbnails/28_traffic_light_thumbnail.webp" alt="Video of a traffic light working">
+          <div class="modal-panel">
+            <video class="article-img-full" preload="metadata" autoplay loop muted></video>
+            <span class="close">&times;</span>
+          </div>
+          <script>modalImage(26, "full-quality/28_working_traffic_light.webm")</script>
+        </div>
+        <p class="article-paragraph">And here’s the cost of it, in comparison to a default set of features:</p>
+        <!--Image comparison block for traffic light-->
+        <div class="img-comp-container">
+          <div class="img-comp-img">
+            <img src="full-quality/29_2_traffic_light_enabled_shaderview.png">
+          </div>
+          <div class="img-comp-img img-comp-overlay">
+            <img src="full-quality/29_1_traffic_light_enabled.png">
+          </div>
+        </div>
+        
+        <div class="image-format"> 
+          <!-- The Modal 26 - traffic light shader stats -->
+          <img class="article-img" src="thumbnails/30_traffic_light_stats.webp" alt="Traffic light stats">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(27, "full-quality/30_traffic_light_stats.jpg")</script>
+        </div>
+
+
+        <p class="article-paragraph">
+          Overall, implementing the traffic light, with some back’n’forth on debugging and refactoring, took around 2 hours.
+        </p>
+
+        <br>
+        <p class="article-paragraph">That is pretty much it for this master material.
+          There are some thing which could be improved, mostly some additional features and controls, and some optimization regarding how decals are applied, how base textures are applied (as with proper workflow, even the unpacked 3rd party textures is best to just pack externally in some way), 
+          and in general I didn’t really follow any naming conventions for the assets outside of materials themselves (textures specifically), but as this is intended to showcase the master material specifically, this was omitted for purposes of this work.
+        </p>
+        <div class="image-format"> 
+          <!-- The Modal 27 - Final shader cost -->
+          <img class="article-img" src="thumbnails/31_1_all_featrues_MI.webp" alt="All material instance features part 1">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(28, "full-quality/31_1_all_featrues_MI.jpg")</script>
+        </div>
+        <div class="image-format"> 
+          <!-- The Modal 27 - Final shader cost -->
+          <img class="article-img" src="thumbnails/31_2_all_featrues_MI.webp" alt="All material instance features part 2">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(29, "full-quality/31_2_all_featrues_MI.jpg")</script>
+        </div>
+        <div class="image-format"> 
+          <!-- The Modal 27 - Final shader cost -->
+          <img class="article-img" src="full-quality/31_3_all_featrues_MI.jpg" alt="All material instance features part 2">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(30, "full-quality/31_3_all_featrues_MI.jpg")</script>
+        </div>
+        <p class="article-paragraph">Final cost of a material with every feature enabled:</p>
+        <div class="image-format"> 
+          <!-- The Modal 27 - Final shader cost -->
+          <img class="article-img" src="full-quality/32_final_shader_stats.jpg" alt="Final shader cost stats">
+          <div class="modal-panel"> 
+            <img class="article-img-full" loading="lazy"><span class="close">&times;</span>
+          </div>
+          <script>modalImage(31, "full-quality/32_final_shader_stats.jpg")</script>
+        </div>
+
+      
+        <script>initComparisons()</script>
+      </article>
+
+      <hr class="block-separator">
+      <h3 id="credits">Credits</h3>
+      <div class="credits">
+        <p>"Concrete Bollard Scan 01 | Retopologized"<br> 
+          (<a href="https://skfb.ly/6WM8K" target="_blank">https://skfb.ly/6WM8K</a>)<br> 
+          by Kai Moisch is licensed under <br>
+          Creative Commons Attribution<br> 
+          (<a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">http://creativecommons.org/licenses/by/4.0/</a>).
+        </p>
+        <p>"Street Bollard" <br>
+          (<a href="https://skfb.ly/6RNLL" target="_blank">https://skfb.ly/6RNLL</a>)<br> 
+          by Faheem Yusuf is licensed under<br> 
+          Creative Commons Attribution<br> 
+          (<a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">http://creativecommons.org/licenses/by/4.0/</a>).
+        </p>
+        <p>"Barrier & Traffic Cone Pack"<br> 
+          (<a href="https://skfb.ly/6n8ST" target="_blank">https://skfb.ly/6n8ST</a>)<br> 
+          by Sabri Ayeş is licensed under<br> 
+          Creative Commons Attribution<br> 
+          (<a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">http://creativecommons.org/licenses/by/4.0/</a>).
+        </p>
+        <p>"Traffic Light"<br> 
+          (<a href="https://skfb.ly/6WnDx" target="_blank">https://skfb.ly/6WnDx</a>)<br> 
+          by Lyskilde is licensed under<br> 
+          Creative Commons Attribution-NonCommercial<br>
+          (<a href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">http://creativecommons.org/licenses/by-nc/4.0/</a>).
+        </p>
+      </div>
+      
+    </main>
+    <footer>
+      © Reptilian VladeoZ 2025<br>
+      No genAI was used in creation of this website or any of the content on it.<br>
+      No permission given to use any content of this website to train any genAI algorithm.
+    </footer>
+    
+    
+  </div>
+</body>
+
+</html>
