@@ -580,15 +580,15 @@ footer {
     max-width: 600px; 
   }
   .display-case{
-    img {
-      width: 300px;
-      height: 150px;
-      object-fit: cover;
-    }
-    video{
-      width: 300px;
-      height: 150px;
-      object-fit: cover;
+    div {
+      img {
+        width: 300px;
+        height: 150px;
+      }
+      video{
+        width: 300px;
+        height: 150px;
+      }
     }
   }
 }
@@ -698,6 +698,10 @@ footer {
   .display-case {
     div {
       img {
+        width: 100%;
+        height: auto;
+      }
+      video{
         width: 100%;
         height: auto;
       }
