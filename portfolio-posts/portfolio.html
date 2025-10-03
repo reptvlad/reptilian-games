@@ -35,19 +35,130 @@
 </header>
 <main class="content-panel">
         <!-- MAIN PAGE BODY - here go any post I wanna make-->
+        <h1 style="padding-left: 10px; font-size: 40px;">Experience and my works</h1>
         <section class="content-block">
-          <h1 style="padding-left: 10px;">My TechArt portfolio works<br> (currently a couple more works are in progress)</h1>
-          <div class="display-case">
+          <h1 style="padding-left: 10px; font-size: 32px;">Work Experience, Released and Unreleased Titles</h1>
+          <div class="image-format" style="">
+            <img class="article-img" style="object-fit: contain; max-height: 16vw; width:auto; margin-left: 3vw; cursor: default;" src="images/outriders_newhorizon.webp">
+            <img class="article-img" style="object-fit: contain; max-height: 16vw; width:auto; margin-left: 10px; cursor: default;" src="images/outriders_worldslayer.webp">
+            <img class="article-img" style="object-fit: contain; max-height: 16vw; width:auto; margin-left: 10px; cursor: default;" src="images/nda_placeholder.webp">
+            <img class="article-img" style="object-fit: contain; max-height: 16vw; width:auto; margin-left: 10px; cursor: default;" src="images/nda_placeholder.webp">
+            <img class="article-img" style="object-fit: contain; max-height: 16vw; width:auto; margin-left: 10px; cursor: default;" src="images/pcf_core.webp">
+          </div>
+          <ul class="article-list">
+            <li>
+              <b>Outriders: New Horizon (UE4)</b> - performance testing and analysis on X1/PS4 of new levels added with the update.
+            </li>
+            <li>
+              <b>Outriders: Worldslayer (UE4)</b> - performance testing, analysis and some optimization work (setting up HLODs in one of the levels) on X1/PS4.
+            </li>
+            <li>
+              <b>NDA project 1 (UE5)</b> - creating a tool for managing WP HLODs settings on actors within a level, R&D into World Partition HLOD system added with UE5 and creation of appropriate workflows, 
+              performance testing, analysis, optimization and rendering breakdowns on XSX/PS5/PC.<br>
+              Working with VFX, Environment art teams, helping with their tasks and issues.<br>
+              Working with QA and TechQA team on establishing automated performance gathering workflows, creating overall test design.<br>
+            </li>
+            <li>
+              <b>NDA project 2 (UE5)</b> - implementation of and consultation regarding WP HLODs for procedurally generated assets, performance analysis and rendering breakdowns.
+            </li>
+            <li>
+              <b>PCF Core/Framework (UE5)</b> - maintenance and transition of project-specific tooling into universally available ones, establishment of performance targets, 
+              guidelines on best practices, organization of automated WP HLODs rebuilds.<br>
+              Documentation creation and maintenance for owner-less tools, relevant R&D and design docs, 
+              writing rendering breakdowns and comparison docs across several projects with the goal of establishing universal quality and performance targets.
+            </li>
+          </ul>
+          <hr style="margin-top: 20px; margin-bottom: 20px;">
+          <h1 style="padding-left: 10px; font-size: 32px;">City Props Master Material</h1>
+          <div class="image-format">
+            <video class="article-img" style="display: block; object-fit: contain; max-width: fit-content; max-height: 600px; max-width: 65%;  margin: auto; cursor: default;" src="/portfolio-posts/master-material/full-quality/1_animated_thumbnail.webm" autoplay muted loop></video>
+          </div>
+          <div class="image-format" style="display: flex;">
+            <video class="article-img" style="display: block; object-fit: contain; max-height: 12vw; width:auto; margin: auto; cursor: default;" src="/portfolio-posts/master-material/full-quality/28_working_traffic_light.webm" autoplay muted loop></video>
+            <video class="article-img" style="display: block; object-fit: contain; max-height: 12vw; width:auto; margin: auto; cursor: default;" src="/portfolio-posts/master-material/full-quality/17_Cpd_Showcase.webm" autoplay muted loop></video>
+          </div>
+          <h2 style="margin-left: 6vw; font-size: 26px;">Features</h2>
+          <ul class="article-list">
+            <li>
+              Grime and dirt masks support, and grime application in places of contact.
+            </li>
+            <li>
+              Graffiti decals done from inside the material.
+            </li>
+            <li>
+              Material-controlled traffic light.
+            </li>
+            <li>
+              Custom Primitive Data utilization for extra customization per actor without extra material instances.
+            </li>
+          </ul>
+          <div class="display-case" style="margin: auto; max-width: fit-content;">
             <a href="/portfolio-posts/master-material/material-works.html">
               <div>
-                <img src="/portfolio-posts/master-material/thumbnails/1_animated_thumbnail.webp" alt="Master Material">
-                <h2>City Props Master Material</h2>
+                <h2>Full breakdown here</h2>
                 <hr>
-                <p> Showcase of creating a master material for city props in UE<br> as well as some extra material
-                  effects</p>
+                <p> <b>Includes material performance stats, shader complexity view and time estimates</b></p>
               </div>
             </a>
           </div>
+          <hr style="margin-top: 20px; margin-bottom: 20px;">
+          <h1 style="padding-left: 10px; font-size: 32px;">Jared Character Customizer (Prototype, Godot)</h1>
+          <div class="image-format">
+            <video class="article-img" style="display: block; object-fit: contain; margin: auto; cursor: default; max-height: 600px; max-width: 65%;" src="images/JaredCustomizerPrototype.mp4" autoplay muted loop></video>
+          </div>
+          <p style="margin-left: 6vw;">
+            <b>Prototype made within a roughly a day to try and gather interest and start up a fan project with the intention of using the customized character as avatars for people within the community.<br>
+            Character design by Michi Mochievee, model made and rigged (not visible in the video) by myself, as well as created a custom shader for it, and written the customization logic</b>
+          </p>
+          <div class="display-case" style="margin: auto; max-width: fit-content;">
+            <a href="https://github.com/reptvlad/JaredCustomizer" target="_blank">
+              <div>
+                <h2>GitHub project</h2>
+                <hr>
+                <p> <b>Also includes WIP documentation I written in the Wiki of the project, as example of my tech writing</b></p>
+              </div>
+            </a>
+          </div>
+          <div class="display-case" style="margin: auto; max-width: fit-content;">
+            <a href="/WebJared/Prototype_Web.html" target="_blank">
+              <div>
+                <h2>Browser playable</h2>
+                <hr>
+                <p> <b>Build of the project to test how the project works in browser, without additional adjustments</b></p>
+              </div>
+            </a>
+          </div>
+          <hr style="margin-top: 20px; margin-bottom: 20px;">
+          <h1 style="padding-left: 10px; font-size: 32px;">Game mods</h1>
+          <p style="margin-left: 6vw;">
+            <b>Modding for PAYDAY 3 I did in free time, mostly texture and mesh replacements.</b>
+          </p>
+          <div class="display-case">
+          <a href="https://modworkshop.net/mod/49518" target="_blank">
+            <div>
+              <img src="/personal-projects/images/tas12-thumbnail.webp" alt="thumbnail with a modded gun for Payday 3">
+              <p>Folded foldable stock for TAS-12 (SPAS-12) shotgun</p>
+            </div>
+          </a>
+          <a href="https://modworkshop.net/mod/48781" target="_blank">
+            <div>
+              <img src="/personal-projects/images/blackberry-mod-banner.webp" alt="thumbnail with blackberry phone for Payday 3">
+              <p>Replaces in-game smartphone with a Blackberry phone</p>
+            </div>
+          </a>
+          <a href="https://modworkshop.net/mod/46663" target="_blank">
+            <div>
+              <img src="/personal-projects/images/pd-titles-thumbnail.webp" alt="thumbnail with 4 different logo variants for Payday 3">
+              <p>My redesigns of Payday 3 title logo</p>
+            </div>
+          </a>
+          <a href="https://modworkshop.net/mod/46701" target="_blank">
+            <div>
+              <img src="/personal-projects/images/throwable-psp.webp" alt="thumbnail for a throwable PSP mod for Payday 3">
+              <p>Replaces in-game throwing knife with a PSP</p>
+            </div>
+          </a>
+        </div>
         </section>
       </main>
       <footer>
